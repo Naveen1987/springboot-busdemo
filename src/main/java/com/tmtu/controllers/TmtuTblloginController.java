@@ -1,11 +1,10 @@
 package com.tmtu.controllers;
 
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.tmtu.models.Tbllogin;
+import com.tmtu.models.Tbluserreporting;
 import com.tmtu.services.TmtuTblloginService;
 import com.tmtu.services.TmtuTblroleService;
+import com.tmtu.services.TmtuTbluserreportingService;
 
 
 @RestController
@@ -32,6 +32,9 @@ public class TmtuTblloginController {
 	@Autowired
 	TmtuTblroleService tmtuTblroleService; 
 	
+	@Autowired
+	TmtuTbluserreportingService tmtuTbluserreportingService;
+	
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, String>> login(@RequestParam("username") String userName,@RequestParam("password") String password)  {
 		Map<String,String> json=new HashMap<String,String>();
@@ -43,6 +46,7 @@ public class TmtuTblloginController {
 			json.put("email", tbllogin.getEmail());
 			json.put("roleid", tbllogin.getTblrole().getRoleId()+"");
 			json.put("username", tbllogin.getUserName());
+			json.put("password", tbllogin.getPassword());
 			return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);		
 		}
 		else {
@@ -58,7 +62,10 @@ public class TmtuTblloginController {
 			@RequestParam("displayname") String displayName,
 			@RequestParam("username") String userName,
 			@RequestParam("password") String password,
-			@RequestParam("roleid") long roleId
+			@RequestParam("roleid") long roleId,
+			@RequestParam(value="reportto",required=false) Long reportto,
+			@RequestParam(value="datefrom",required=false) Long datefrom,
+			@RequestParam(value="dateto",required=false) Long dateto
 			){
 		Map<String,String> json=new HashMap<String,String>();
 		Tbllogin tbllogin=tmtuTblloginService.save(userName, password, displayName, email, createdBy,roleId);
@@ -67,12 +74,22 @@ public class TmtuTblloginController {
 			return new ResponseEntity<Map<String, String>>(json, HttpStatus.BAD_REQUEST);
 		}
 		else {
+			if(reportto!=null && datefrom!=null &&dateto!=null) {
+				Tbluserreporting tbluserreporting=tmtuTbluserreportingService.save(tbllogin.getTblloginId(), createdBy, reportto, datefrom, dateto);
+				if(tbluserreporting==null) {
+					json.put("reportmsg", "Reporting Manager not added successfully");
+				}
+				else {
+				json.put("reportmsg", "Reporting Manager added successfully");	
+				}	
+			}
 			json.put("msg", "User Added successfully.");
 			json.put("id", tbllogin.getTblloginId()+"");
 			json.put("displayname", tbllogin.getDisplayName());
 			json.put("email", tbllogin.getEmail());
 			json.put("roleid", tbllogin.getTblrole().getRoleId()+"");
 			json.put("username", tbllogin.getUserName());
+			
 			return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);
 		}
 		
@@ -120,6 +137,7 @@ public class TmtuTblloginController {
 			return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);
 		}
 	}
+	
 	@PostMapping("/deactive")
 	public ResponseEntity<Map<String, String>> deActive(
 			@RequestParam("id") long id,
@@ -162,21 +180,19 @@ public class TmtuTblloginController {
 	}
 	
 	@GetMapping("/getuser")
-	public ResponseEntity<Map<String, String>> getByUserName(
+	public ResponseEntity<List<Map<String, String>>> getByUserName(
 			@RequestParam("username") String userName
 			){
-		Map<String,String> json=new HashMap<String,String>();
-		Tbllogin tbllogin=tmtuTblloginService.getByuserName(userName);
-		if(tbllogin==null) {
-			json.put("msg", "User is not exist.");
-			return new ResponseEntity<Map<String, String>>(json, HttpStatus.BAD_REQUEST);
+		List<Map<String, String>> tbllogin=tmtuTblloginService.getByuserName(userName);
+		
+		if(tbllogin.size()<1) {
+			Map<String,String> json=new HashMap<String,String>();
+			json.put("msg", "User does not exist.");
+			tbllogin.add(json);
+			return new ResponseEntity<List<Map<String, String>>>(tbllogin, HttpStatus.BAD_REQUEST);
 		}
 		else {
-			json.put("msg", "User found.");
-			json.put("id", tbllogin.getTblloginId()+"");
-			json.put("displayname", tbllogin.getDisplayName());
-			json.put("username", tbllogin.getUserName());
-			return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);
+			return new ResponseEntity<List<Map<String, String>>>(tbllogin, HttpStatus.OK);
 		}
 	}
 	
@@ -206,7 +222,7 @@ public class TmtuTblloginController {
 			return new ResponseEntity<Map<String, String>>(json, HttpStatus.OK);
 		}
 	}
-		
+
 	@GetMapping("/getusers")
 	public List<Tbllogin> getAllUsers(){
 		return tmtuTblloginService.getAll();

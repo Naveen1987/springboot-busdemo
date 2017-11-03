@@ -7,13 +7,18 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 @Entity(name="tblroletask")
@@ -29,10 +34,6 @@ public class Tblroletask implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long roletaskId;
     @Column(precision=19)
-    private long roleId;
-    @Column(precision=19)
-    private long taskId;
-    @Column(precision=19)
     private long createdBy;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar createdOn;
@@ -44,8 +45,40 @@ public class Tblroletask implements Serializable {
     public Tblroletask() {
         super();
     }
+    /*
+     * Relationship with Tblrole
+     * */
+    
+    @ManyToOne
+    @JoinColumn(name="roleId",foreignKey=@ForeignKey(name="tbllogin_ibfk_1"))
+    @JsonBackReference
+    private Tblrole tblrole;
+    
+      
+    public Tblrole getTblrole() {
+		return tblrole;
+	}
 
-    /**
+	public void setTblrole(Tblrole tblrole) {
+		this.tblrole = tblrole;
+	}
+	/*
+	 * Relationship Tblmenutask
+	 * */
+	@ManyToOne
+	@JoinColumn(name="menutaskId",foreignKey=@ForeignKey(name="tblmenutask_ibfk_2"))
+    @JsonBackReference
+	private Tblmenutask tblmenutask;
+	
+	public Tblmenutask getTblmenutask() {
+		return tblmenutask;
+	}
+
+	public void setTblmenutask(Tblmenutask tblmenutask) {
+		this.tblmenutask = tblmenutask;
+	}
+
+	/**
      * Access method for roletaskId.
      *
      * @return the current value of roletaskId
@@ -63,42 +96,7 @@ public class Tblroletask implements Serializable {
         roletaskId = aRoletaskId;
     }
 
-    /**
-     * Access method for roleId.
-     *
-     * @return the current value of roleId
-     */
-    public long getRoleId() {
-        return roleId;
-    }
-
-    /**
-     * Setter method for roleId.
-     *
-     * @param aRoleId the new value for roleId
-     */
-    public void setRoleId(long aRoleId) {
-        roleId = aRoleId;
-    }
-
-    /**
-     * Access method for taskId.
-     *
-     * @return the current value of taskId
-     */
-    public long getTaskId() {
-        return taskId;
-    }
-
-    /**
-     * Setter method for taskId.
-     *
-     * @param aTaskId the new value for taskId
-     */
-    public void setTaskId(long aTaskId) {
-        taskId = aTaskId;
-    }
-
+  
     /**
      * Access method for createdBy.
      *
@@ -226,7 +224,7 @@ public class Tblroletask implements Serializable {
 
     @Override
 	public String toString() {
-		return "Tblroletask [roletaskId=" + roletaskId + ", roleId=" + roleId + ", taskId=" + taskId + ", createdBy="
+		return "Tblroletask [roletaskId=" + roletaskId + ", roleId=" + tblrole.getRoleId() + ", taskId=" + tblmenutask.getMenutaskId() + ", createdBy="
 				+ createdBy + ", createdOn=" + createdOn + ", lastModifiedBy=" + lastModifiedBy + ", lastModifiedOn="
 				+ lastModifiedOn + "]";
 	}

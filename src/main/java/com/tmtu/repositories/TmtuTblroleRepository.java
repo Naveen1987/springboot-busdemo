@@ -24,5 +24,4 @@ public List<Tblrole> findBylastModifiedOn(Calendar lastModifiedOn);
 public List<Tblrole> findBytblloginIn(Set<Tbllogin> aTbllogin);
 
 public Tblrole findByRoleId(long roleId);
-
 }

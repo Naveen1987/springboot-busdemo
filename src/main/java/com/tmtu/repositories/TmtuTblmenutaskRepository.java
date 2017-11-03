@@ -15,7 +15,6 @@ import com.tmtu.models.Tblmenutask;
 public interface TmtuTblmenutaskRepository extends CrudRepository<Tblmenutask, Long>,TmtuTblmenutaskRepositoryCustom {
 	public List<Tblmenutask> findBycreatedBy(long createdBy);
 	public List<Tblmenutask> findBycreatedOn(Calendar createdOn);
-	public List<Tblmenutask> findBygroupId(long groupId);
 	public List<Tblmenutask> findBylastModifiedBy(long ModifiedBy);
 	public List<Tblmenutask> findBylastModifiedOn(Calendar ModifiedOn);
 	public List<Tblmenutask> findBymenuName(String menuName);

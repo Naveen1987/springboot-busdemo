@@ -1,13 +1,17 @@
 package com.tmtu.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 //import java.sql.Timestamp;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,11 +19,13 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 //import org.hibernate.annotations.ForeignKey;
@@ -59,8 +65,16 @@ public class Tbllogin implements Serializable {
     @JoinColumn(name="roleId",foreignKey=@ForeignKey(name="tbllogin_ibfk_1"))
     @JsonBackReference
     private Tblrole tblrole;
+    
+    
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="loginId",cascade=CascadeType.ALL,orphanRemoval=true)
+    @JsonManagedReference
+    private List<Tbluserreporting> tbluserreporting=new ArrayList<Tbluserreporting>();
+    
+    
+    	
 
-    /** Default constructor. */
+	/** Default constructor. */
     public Tbllogin() {
         super();
     }
@@ -282,8 +296,24 @@ public class Tbllogin implements Serializable {
     public void setTblrole(Tblrole aTblrole) {
         tblrole = aTblrole;
     }
-
     /**
+     * Access method for Tbluserreporting.
+     *
+     * @return the current value of Tbluserreporting
+     */
+	public List<Tbluserreporting> getTbluserreporting() {
+		return tbluserreporting;
+	}
+	/**
+     * Setter method for Tbluserreporting.
+     *
+     * @param aTblrole the new value for Tbluserreporting
+     */
+	public void setTbluserreporting(List<Tbluserreporting> tbluserreporting) {
+		this.tbluserreporting = tbluserreporting;
+	}
+
+	/**
      * Compares the key for this instance with another Tbllogin.
      *
      * @param other The object to compare to
@@ -353,5 +383,21 @@ public class Tbllogin implements Serializable {
         ret.put("loginId", new Long(getTblloginId()));
         return ret;
     }
+    
+    /*
+     * Adding reverse refrence
+     */
+    
+    /*
+     * 
+     * For adding the dependency of foreign key for Tbluserreporting
+     * 
+     * */
+        public void addRoleTask(Tbluserreporting tbl) {
+            if (tbl != null) {
+            	tbluserreporting.add(tbl);
+            	tbl.setLoginId(this);
+            }
+         }
 
 }
