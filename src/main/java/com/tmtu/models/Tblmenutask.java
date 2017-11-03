@@ -1,19 +1,30 @@
 package com.tmtu.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity(name="tblmenutask")
@@ -39,12 +50,41 @@ public class Tblmenutask implements Serializable {
     private long lastModifiedBy;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar lastModifiedOn;
-    @Column(precision=19)
-    private long groupId;
     @Column(length=100)
     private String redirectPage;
 
-    /** Default constructor. */
+    /*
+     * Relationship with tblmenugroup in reverse
+     * */
+    @ManyToOne
+    @JoinColumn(name="menugroupId",foreignKey=@ForeignKey(name="tblmenutask_ibfk_1"))
+    @JsonBackReference
+    private Tblmenugroup tblmenugroup;    
+    public Tblmenugroup getTblmenugroup() {
+		return tblmenugroup;
+	}
+
+	public void setTblmenugroup(Tblmenugroup tblmenugroup) {
+		this.tblmenugroup = tblmenugroup;
+	}
+
+	/*
+     * Relationship with Tbllogin table
+     * */
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="tblmenutask",cascade=CascadeType.ALL,orphanRemoval=true)
+    @JsonManagedReference
+    private List<Tblroletask> tblroletask=new ArrayList<Tblroletask>();
+	
+
+	public List<Tblroletask> getTblroletask() {
+		return tblroletask;
+	}
+
+	public void setTblroletask(List<Tblroletask> tblroletask) {
+		this.tblroletask = tblroletask;
+	}
+
+	/** Default constructor. */
     public Tblmenutask() {
         super();
     }
@@ -158,24 +198,6 @@ public class Tblmenutask implements Serializable {
     }
 
     /**
-     * Access method for groupId.
-     *
-     * @return the current value of groupId
-     */
-    public long getGroupId() {
-        return groupId;
-    }
-
-    /**
-     * Setter method for groupId.
-     *
-     * @param aGroupId the new value for groupId
-     */
-    public void setGroupId(long aGroupId) {
-        groupId = aGroupId;
-    }
-
-    /**
      * Access method for redirectPage.
      *
      * @return the current value of redirectPage
@@ -250,7 +272,7 @@ public class Tblmenutask implements Serializable {
 	public String toString() {
 		return "Tblmenutask [menutaskId=" + menutaskId + ", menuName=" + menuName + ", createdBy=" + createdBy
 				+ ", createdOn=" + createdOn + ", lastModifiedBy=" + lastModifiedBy + ", lastModifiedOn="
-				+ lastModifiedOn + ", groupId=" + groupId + ", redirectPage=" + redirectPage + "]";
+				+ lastModifiedOn + ", groupId=" + tblmenugroup.getMenugroupId() + ", redirectPage=" + redirectPage + "]";
 	}
 
 	/**
@@ -264,4 +286,22 @@ public class Tblmenutask implements Serializable {
         return ret;
     }
 
+
+    /*
+     * 
+     * For adding the dependency of foreign key for Tblroletask
+     * 
+     * */
+
+    /*
+     * 
+     * For adding the dependency of foreign key for Tblroletask
+     * 
+     * */
+        public void addRoleTask(Tblroletask roletask) {
+            if (roletask != null) {
+            	tblroletask.add(roletask);
+            	roletask.setTblmenutask(this);
+            }
+         }
 }

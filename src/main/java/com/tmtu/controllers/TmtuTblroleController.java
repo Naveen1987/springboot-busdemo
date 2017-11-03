@@ -1,5 +1,6 @@
 package com.tmtu.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.tmtu.models.Tbllogin;
 import com.tmtu.models.Tblrole;
 
 import com.tmtu.services.TmtuTblroleService;
@@ -78,6 +81,37 @@ public class TmtuTblroleController {
 		return new ResponseEntity<List<Map<String, String>>>(roles, HttpStatus.OK);
 	}
 	
+	@GetMapping("/usersinrole")
+	public ResponseEntity<Map<String,Object>> getroleByName(
+			@RequestParam("rolename") String rolename
+			){
+		Tblrole tbrole=tmtuTblroleService.getByroleName(rolename);
+		Map<String,Object> roles=new HashMap<String,Object>();
+		if(tbrole!=null) {
+			roles.put("roleid",tbrole.getRoleId()+"");
+			roles.put("rolename",tbrole.getRoleName());
+			ArrayList<Map<String,String>>arr=new ArrayList<Map<String,String>>();
+			for(Tbllogin tbl:tbrole.getTbllogin()) {
+				Map<String,String> users=new HashMap<String,String>();
+				users.put("id", tbl.getTblloginId()+"");
+				users.put("displayname", tbl.getDisplayName());
+				users.put("email", tbl.getEmail());
+				users.put("username", tbl.getUserName());
+				arr.add(users);
+			}
+			roles.put("users", arr);
+			roles.put("msg", "role found");
+			return new ResponseEntity<Map<String, Object>>(roles, HttpStatus.OK);
+		}
+		roles.put("msg", "Not found");
+		return new ResponseEntity<Map<String, Object>>(roles, HttpStatus.BAD_REQUEST);
+		} 
 	
-	
+	/*@GetMapping("/reportingto")
+	public Tblrole getroleByName(
+			@RequestParam("rolename") String rolename
+			){
+		Tblrole tbrole=tmtuTblroleService.getByroleName(rolename);
+		return tbrole;
+		} */
 }

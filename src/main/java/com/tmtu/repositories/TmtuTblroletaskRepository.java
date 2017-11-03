@@ -17,6 +17,5 @@ public List<Tblroletask> findBycreatedBy ( long createdBy);
 public List<Tblroletask> findBycreatedOn(Calendar createdOn);
 public List<Tblroletask> findBylastModifiedBy(long lastModifiedBy);
 public List<Tblroletask> findBylastModifiedOn(Calendar lastModifiedOn);
-public List<Tblroletask> findByroleId(long roleId);
-public List<Tblroletask> findBytaskId(long taskId);
+
 }

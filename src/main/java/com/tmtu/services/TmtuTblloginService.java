@@ -1,7 +1,10 @@
 package com.tmtu.services;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.tmtu.models.Tbllogin;
 import com.tmtu.models.Tblrole;
+import com.tmtu.models.Tbluserreporting;
 import com.tmtu.repositories.TmtuTblloginRepository;
+import com.tmtu.repositories.TmtuTbluserreportingRepository;
 
 /**
  * This service for login
@@ -21,12 +26,35 @@ public class TmtuTblloginService {
 @Autowired
 TmtuTblloginRepository tmtuTblloginRepository;
 
+@Autowired
+TmtuTbluserreportingRepository tmtuTbluserreportingRepository;
+
+
 private static final Logger logger=LoggerFactory.getLogger("Login Service");
-
-
-public Tbllogin getByuserName(String userName) {
-	
-	return tmtuTblloginRepository.findByuserName(userName);
+public List<Map<String, String>> getByuserName(String userName) {
+	List<Map<String, String>> listUser=new ArrayList<Map<String, String>>();
+			List<Tbllogin> users=tmtuTblloginRepository.findByuserName(userName);
+			users.forEach(record->{
+				Map<String,String> usr=new HashMap<String,String>();
+				usr.put("id",record.getTblloginId()+"");
+				usr.put("username", record.getUserName());
+				usr.put("roleid", record.getTblrole().getRoleId()+"");
+				usr.put("displayname", record.getDisplayName());
+				usr.put("isactive",record.getIsActive());
+				Tbluserreporting tbluserreporting=tmtuTbluserreportingRepository.getReportingManagerByLoginId(record.getTblloginId());
+				if(tbluserreporting!=null) {
+				usr.put("reportid",tbluserreporting.getUserreportingid()+"");
+				usr.put("reportingto",tbluserreporting.getReportingTo()+"");
+				usr.put("datefrom",tbluserreporting.getDateFrom().getTimeInMillis()+"");
+				usr.put("dateto",tbluserreporting.getDateTo().getTimeInMillis()+"");
+				}
+				else {
+					usr.put("reportmsg","No reporting Manager Assign");
+					
+					}
+				listUser.add(usr);
+			});
+			return listUser;
 }
 public List<Tbllogin> getBycreatedBy(long createdBy){
 	return tmtuTblloginRepository.findBycreatedBy(createdBy);

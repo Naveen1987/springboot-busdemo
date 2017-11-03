@@ -2,16 +2,22 @@
 package com.tmtu.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name="tblmenugroup")
 @Table(indexes={@Index(name="menugroupId_tblmenugroup", columnList="menugroupId")})
@@ -26,8 +32,21 @@ public class Tblmenugroup implements Serializable {
     private long menugroupId;
     @Column(length=45,name="groupName")
     private String groupName;
+    /*
+     * For maintain the relationship this parent table
+     * */
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="tblmenugroup",orphanRemoval=true)
+    @JsonManagedReference
+    private List<Tblmenutask> tblmenutask=new ArrayList<Tblmenutask>();
+    public List<Tblmenutask> getTblmenutask() {
+		return tblmenutask;
+	}
 
-    /** Default constructor. */
+	public void setTblmenutask(List<Tblmenutask> tblmenutask) {
+		this.tblmenutask = tblmenutask;
+	}
+
+	/** Default constructor. */
     public Tblmenugroup() {
         super();
     }
@@ -135,6 +154,16 @@ public class Tblmenugroup implements Serializable {
         return ret;
     }
 
-	
+    /*
+     * 
+     * For adding the dependency of foreign key for Tbllogin
+     * 
+     * */
+        public void addMenuTask(Tblmenutask menutask) {
+            if (menutask != null) {
+            	tblmenutask.add(menutask);
+            	menutask.setTblmenugroup(this);
+            }
+         }
 
 }

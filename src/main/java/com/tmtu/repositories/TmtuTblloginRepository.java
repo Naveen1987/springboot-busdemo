@@ -2,7 +2,10 @@ package com.tmtu.repositories;
 
 import java.util.Calendar;
 import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.tmtu.models.Tbllogin;
 import com.tmtu.models.Tblrole;
@@ -19,7 +22,7 @@ public interface TmtuTblloginRepository extends CrudRepository<Tbllogin,Long>,Tm
 /*
  *Selection on the base of individual Value
  */
-public Tbllogin findByuserName(String userName);
+
 public List<Tbllogin> findBycreatedBy(long createdBy);
 public List<Tbllogin> findBycreatedOn(Calendar createdOn);
 public List<Tbllogin> findBydisplayName(String displayName);
@@ -29,6 +32,13 @@ public List<Tbllogin> findByisActive(String isActive);
 public List<Tbllogin> findBylastModifiedBy(long lastModifiedBy);
 public List<Tbllogin> findBylastModifiedOn(Calendar lastModifiedOn);
 public List<Tbllogin> findBytblrole(Tblrole tblrole);
+
+/*
+ * For Ajax Finding Users
+ * */
+
+@Query("select l from Tbllogin l where lower(l.userName) LIKE lower(concat('%', :username,'%'))")
+public List<Tbllogin> findByuserName(@Param("username")String userName);
 
 /*
  * For finding username and password 

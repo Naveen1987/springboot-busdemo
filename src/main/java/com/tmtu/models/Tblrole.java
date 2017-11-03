@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,11 +45,29 @@ public class Tblrole implements Serializable {
     private long lastModifiedBy;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar lastModifiedOn;
-    @OneToMany(fetch=FetchType.LAZY,mappedBy="tblrole")
+    
+    /*
+     * Relationship with Tbllogin table
+     * */
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="tblrole",cascade=CascadeType.ALL,orphanRemoval=true)
     @JsonManagedReference
     private List<Tbllogin> tbllogin=new ArrayList<Tbllogin>();
+    
+    /*
+     * Relationship with Tblroletask table
+     * */
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="tblrole",cascade=CascadeType.ALL,orphanRemoval=true)
+    @JsonManagedReference
+    private List<Tblroletask> tblroletask=new ArrayList<Tblroletask>();
+    public List<Tblroletask> getTblroletask() {
+		return tblroletask;
+	}
 
-    /** Default constructor. */
+	public void setTblroletask(List<Tblroletask> tblroletask) {
+		this.tblroletask = tblroletask;
+	}
+
+	/** Default constructor. */
     public Tblrole() {
         super();
     }
@@ -249,7 +269,7 @@ public class Tblrole implements Serializable {
     }
 /*
  * 
- * For adding the dependency of foreign key
+ * For adding the dependency of foreign key for Tbllogin
  * 
  * */
     public void addUser(Tbllogin user) {
@@ -258,4 +278,17 @@ public class Tblrole implements Serializable {
         	user.setTblrole(this);
         }
      }
+    
+    /*
+     * 
+     * For adding the dependency of foreign key for Tblroletask
+     * 
+     * */
+        public void addRoleTask(Tblroletask roletask) {
+            if (roletask != null) {
+            	tblroletask.add(roletask);
+            	roletask.setTblrole(this);
+            }
+         }
+    
 }
