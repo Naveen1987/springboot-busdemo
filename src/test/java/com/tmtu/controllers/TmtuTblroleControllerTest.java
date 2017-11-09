@@ -11,7 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import com.tmtu.services.TmtuTblroleService;
+
+import com.tmtu.admin.controllers.TmtuTblroleController;
+import com.tmtu.admin.services.TmtuTblroleService;
 
 
 
@@ -31,7 +33,7 @@ public class TmtuTblroleControllerTest {
 	
 	
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblroleController#saveRole(java.lang.String, long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblroleController#saveRole(java.lang.String, long)}.
 	 */
 	@Test
 	public void testSaveRole() {
@@ -39,7 +41,7 @@ public class TmtuTblroleControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblroleController#updateRole(java.lang.String, long, long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblroleController#updateRole(java.lang.String, long, long)}.
 	 */
 	@Test
 	public void testUpdateRole() {
@@ -47,7 +49,7 @@ public class TmtuTblroleControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblroleController#getrole(long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblroleController#getrole(long)}.
 	 */
 	@Test
 	public void testGetrole() {
@@ -55,7 +57,7 @@ public class TmtuTblroleControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblroleController#getAllRoles()}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblroleController#getAllRoles()}.
 	 */
 	@Test
 	public void testGetAllRoles() {

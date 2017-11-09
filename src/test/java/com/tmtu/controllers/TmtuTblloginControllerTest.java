@@ -13,7 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.tmtu.services.TmtuTblloginService;
+import com.tmtu.admin.controllers.TmtuTblloginController;
+import com.tmtu.admin.services.TmtuTblloginService;
 
 /**
  * @author Administrator
@@ -30,7 +31,7 @@ public class TmtuTblloginControllerTest {
 	private TmtuTblloginService tmtuTblloginService;
 	
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#login(java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#login(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testLogin() {
@@ -38,7 +39,7 @@ public class TmtuTblloginControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#saveUser(long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#saveUser(long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, long)}.
 	 */
 	@Test
 	public void testSaveUser() {
@@ -46,7 +47,7 @@ public class TmtuTblloginControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#updateprofile(long, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#updateprofile(long, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testUpdateprofile() {
@@ -54,7 +55,7 @@ public class TmtuTblloginControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#updateRole(long, long, long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#updateRole(long, long, long)}.
 	 */
 	@Test
 	public void testUpdateRole() {
@@ -62,7 +63,7 @@ public class TmtuTblloginControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#deActive(long, long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#deActive(long, long)}.
 	 */
 	@Test
 	public void testDeActive() {
@@ -70,7 +71,7 @@ public class TmtuTblloginControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#getById(long)}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#getById(long)}.
 	 */
 	@Test
 	public void testGetById() {
@@ -78,7 +79,7 @@ public class TmtuTblloginControllerTest {
 	}
 
 	/**
-	 * Test method for {@link com.tmtu.controllers.TmtuTblloginController#getAllUsers()}.
+	 * Test method for {@link com.tmtu.admin.controllers.TmtuTblloginController#getAllUsers()}.
 	 */
 	@Test
 	public void testGetAllUsers() {
