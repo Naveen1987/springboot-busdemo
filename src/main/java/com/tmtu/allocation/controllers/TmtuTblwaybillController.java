@@ -1,5 +1,6 @@
 package com.tmtu.allocation.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -165,6 +166,44 @@ public class TmtuTblwaybillController {
 		jsonInner.put("createon", tbl.getTbldutyallocation().getCreatedOn());
 		json.put("duty", jsonInner);
 		return new ResponseEntity<Map<String,Object>>(json, HttpStatus.OK);
+	}
+	
+	@GetMapping("/tranactionofwaywill")
+	public ResponseEntity<Map<String,Object>>  tranactionofwaywill(
+			@RequestParam("waywillnumber") Long waywillnumber
+			) {
+		Tblwaybill tbl=tmtuTblwaybillService.findWayWill(waywillnumber);
+		if(tbl!=null) {
+			Map<String,Object>json=new HashMap<String,Object>();
+			json.put("msg", "Not Saved");
+			json.put("waybillnumber", tbl.getWaybillnumber());
+			json.put("waybilldate", tbl.getWayBillDate().getTimeInMillis());
+			json.put("issuedtickets", tbl.getIssuedTickets());
+			json.put("issuedroll", tbl.getIssuedRoll());
+			json.put("status", tbl.getStatus());
+			json.put("createdon",tbl.getCreatedOn().getTimeInMillis());
+			ArrayList<Map<String,Object>> innerJson=new ArrayList<Map<String,Object>>();
+			tbl.getTbltransaction().forEach(record->{
+				Map<String,Object> transjson=new HashMap<String,Object>();
+				transjson.put("transactionid", record.getTransactionid());
+				transjson.put("fromstopage",record.getFromstopage());
+				transjson.put("tostopage",record.getTostopage());
+				transjson.put("totaltickets",record.getTotaltickets());
+				transjson.put("totalamount",record.getTotalamount());
+				transjson.put("paymenttype",record.getPaymenttype());
+				transjson.put("createdby",record.getCreatedby());
+				transjson.put("createdon",record.getCreatedOn().getTimeInMillis());
+				transjson.put("modifiedby",record.getLastModifiedBy());
+				innerJson.add(transjson);
+			});
+			json.put("tranactions", innerJson);
+			return new ResponseEntity<Map<String,Object>>(json, HttpStatus.OK);
+		}
+		else {
+			Map<String,Object>json=new HashMap<String,Object>();
+			json.put("msg", "Not Saved");
+			return new ResponseEntity<Map<String,Object>>(json, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 }

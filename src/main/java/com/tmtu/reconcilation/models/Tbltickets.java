@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,7 +26,7 @@ public class Tbltickets implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    //@GeneratedValue(strategy=GenerationType.IDENTITY)
     private long ticketid;
     @Column(length=45)
     private String tickettype;
@@ -34,6 +34,8 @@ public class Tbltickets implements Serializable {
     private double fare;
     @Column(precision=19)
     private long createdby;
+    @Column(precision=19)
+    private long concession;
     @Column(precision=19)
     private long lastModifiedBy;
     private Calendar createdOn;
@@ -102,7 +104,15 @@ public class Tbltickets implements Serializable {
         fare = aFare;
     }
 
-    /**
+    public long getConcession() {
+		return concession;
+	}
+
+	public void setConcession(long concession) {
+		this.concession = concession;
+	}
+
+	/**
      * Access method for createdby.
      *
      * @return the current value of createdby

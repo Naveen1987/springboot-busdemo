@@ -18,4 +18,7 @@ public interface TmtuTblwaybillRepository extends PagingAndSortingRepository<Tbl
 	
 	@Query("select T from tblwaybill T where T.status=false and T.tbldutyallocation.status=false")
 	public Page<Tblwaybill> findAllCancelWayWill(Pageable page);
+	
+	
+	
 }

@@ -51,8 +51,7 @@ public class TmtuTblstopmasterService {
 			if(e.getKey().equalsIgnoreCase("stops")) {
 				List<Map<String,Object>> list=(List<Map<String, Object>>) e.getValue();
 				list.forEach(ls->{
-					
-					System.out.println(ls);
+					//System.out.println(ls);
 					if(ls.get("stopid")!=null) {
 						Tblstopmaster tblstopmaster=	tmtuTblstopmasterRepository.update(
 								new Long(ls.get("stopid").toString()),

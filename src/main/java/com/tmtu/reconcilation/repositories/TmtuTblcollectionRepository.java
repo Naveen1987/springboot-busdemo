@@ -7,4 +7,5 @@ import com.tmtu.reconcilation.models.Tblcollection;
 @Repository
 public interface TmtuTblcollectionRepository extends PagingAndSortingRepository<Tblcollection,Long>,TmtuTblcollectionRepositoryCustom{
 
+	
 }
