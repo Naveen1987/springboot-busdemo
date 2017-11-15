@@ -64,7 +64,10 @@ public class Tbldutyallocation implements Serializable {
     private long lastModifiedBy;
     private Calendar fromDate;
     private Calendar toDate;
+    
+    @Column(length=45)
     private Calendar startTime;
+    @Column(length=45)
     private Calendar endTime;
     private Calendar createdOn;
     private Calendar lastModifiedOn;

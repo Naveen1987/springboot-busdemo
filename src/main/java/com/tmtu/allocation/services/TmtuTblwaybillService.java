@@ -20,11 +20,16 @@ public class TmtuTblwaybillService {
 	
 	public Tblwaybill save(
 			Long dutyAllocationId,
+			Long conductorId,
+			String machineNumber,
+			Long driverid,
+			String busNumber,
+			Long shiftType,
 			Long issuedTickets,
 			Long issuedRoll,
 			Long createdBy
 			) {
-		return tmtuTblwaybillRepository.save(dutyAllocationId, issuedTickets, issuedRoll, createdBy);
+		return tmtuTblwaybillRepository.save(dutyAllocationId,conductorId,machineNumber,driverid,busNumber,shiftType, issuedTickets, issuedRoll, createdBy);
 	}
 	
 	public Tblwaybill cancel(
@@ -56,8 +61,8 @@ public class TmtuTblwaybillService {
 				jsonInner.put("todate", tbl.getTbldutyallocation().getToDate().getTimeInMillis());
 				jsonInner.put("startstoppage", tbl.getTbldutyallocation().getStartStoppage());
 				jsonInner.put("endstoppage", tbl.getTbldutyallocation().getEndStoppage());
-				jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime().getTimeInMillis());
-				jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime().getTimeInMillis());
+				jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime());
+				jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime());
 				jsonInner.put("depotcode", tbl.getTbldutyallocation().getDepotcode());
 				jsonInner.put("depotname", tbl.getTbldutyallocation().getDepotName());
 				jsonInner.put("busnumber", tbl.getTbldutyallocation().getBusNumber());
@@ -95,8 +100,8 @@ public class TmtuTblwaybillService {
 				jsonInner.put("todate", tbl.getTbldutyallocation().getToDate().getTimeInMillis());
 				jsonInner.put("startstoppage", tbl.getTbldutyallocation().getStartStoppage());
 				jsonInner.put("endstoppage", tbl.getTbldutyallocation().getEndStoppage());
-				jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime().getTimeInMillis());
-				jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime().getTimeInMillis());
+				jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime());
+				jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime());
 				jsonInner.put("depotcode", tbl.getTbldutyallocation().getDepotcode());
 				jsonInner.put("depotname", tbl.getTbldutyallocation().getDepotName());
 				jsonInner.put("busnumber", tbl.getTbldutyallocation().getBusNumber());
@@ -134,8 +139,8 @@ public class TmtuTblwaybillService {
 				jsonInner.put("todate", tbl.getTbldutyallocation().getToDate().getTimeInMillis());
 				jsonInner.put("startstoppage", tbl.getTbldutyallocation().getStartStoppage());
 				jsonInner.put("endstoppage", tbl.getTbldutyallocation().getEndStoppage());
-				jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime().getTimeInMillis());
-				jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime().getTimeInMillis());
+				jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime());
+				jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime());
 				jsonInner.put("depotcode", tbl.getTbldutyallocation().getDepotcode());
 				jsonInner.put("depotname", tbl.getTbldutyallocation().getDepotName());
 				jsonInner.put("busnumber", tbl.getTbldutyallocation().getBusNumber());

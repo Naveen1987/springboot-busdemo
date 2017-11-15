@@ -27,14 +27,19 @@ public class TmtuTblwaybillController {
 	@Autowired
 	TmtuTblwaybillService tmtuTblwaybillService;
 	
-	@PostMapping("/savewaywill")
+	@PostMapping("/savewaybill")
 	public ResponseEntity<Map<String,Object>> save(
 			@RequestParam("dutyallocationid") Long dutyAllocationId,
+			@RequestParam(value="conductorid",required=false)Long conductorId,
+			@RequestParam(value="machinenumber",required=false) String machineNumber,
+			@RequestParam(value="driverid",required=false) Long driverid,
+			@RequestParam(value="busnumber",required=false) String busNumber,
+			@RequestParam(value="shifttype",required=false) Long shiftType,
 			@RequestParam("issuedtickets") Long issuedTickets,
 			@RequestParam("issuedroll") Long issuedRoll,
 			@RequestParam("createdby") Long createdBy
 			) {
-		Tblwaybill tbl=tmtuTblwaybillService.save(dutyAllocationId, issuedTickets, issuedRoll, createdBy);
+		Tblwaybill tbl=tmtuTblwaybillService.save(dutyAllocationId,conductorId,machineNumber,driverid,busNumber,shiftType, issuedTickets, issuedRoll, createdBy);
 		if(tbl!=null) {
 			Map<String,Object>json=new HashMap<String,Object>();
 			json.put("msg", "Not Saved");
@@ -53,8 +58,8 @@ public class TmtuTblwaybillController {
 			jsonInner.put("todate", tbl.getTbldutyallocation().getToDate().getTimeInMillis());
 			jsonInner.put("startstoppage", tbl.getTbldutyallocation().getStartStoppage());
 			jsonInner.put("endstoppage", tbl.getTbldutyallocation().getEndStoppage());
-			jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime().getTimeInMillis());
-			jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime().getTimeInMillis());
+			jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime());
+			jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime());
 			jsonInner.put("depotcode", tbl.getTbldutyallocation().getDepotcode());
 			jsonInner.put("depotname", tbl.getTbldutyallocation().getDepotName());
 			jsonInner.put("busnumber", tbl.getTbldutyallocation().getBusNumber());
@@ -72,7 +77,7 @@ public class TmtuTblwaybillController {
 		}
 	}
 	
-	@PostMapping("/cancelwaywill")
+	@PostMapping("/cancelwaybill")
 	public ResponseEntity<Map<String,Object>>  cancel(
 			@RequestParam("waywillnumber") Long waywillnumber,
 			@RequestParam("modifiedby") Long modifiedby
@@ -96,8 +101,8 @@ public class TmtuTblwaybillController {
 			jsonInner.put("todate", tbl.getTbldutyallocation().getToDate().getTimeInMillis());
 			jsonInner.put("startstoppage", tbl.getTbldutyallocation().getStartStoppage());
 			jsonInner.put("endstoppage", tbl.getTbldutyallocation().getEndStoppage());
-			jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime().getTimeInMillis());
-			jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime().getTimeInMillis());
+			jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime());
+			jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime());
 			jsonInner.put("depotcode", tbl.getTbldutyallocation().getDepotcode());
 			jsonInner.put("depotname", tbl.getTbldutyallocation().getDepotName());
 			jsonInner.put("busnumber", tbl.getTbldutyallocation().getBusNumber());
@@ -120,18 +125,18 @@ public class TmtuTblwaybillController {
 		Page<Map<String,Object>> data=tmtuTblwaybillService.findAllCancel(page);
 		return new ResponseEntity<Page<Map<String,Object>>>(data, HttpStatus.OK);
 	}
-	@GetMapping("/allwaywills")
+	@GetMapping("/allwaybills")
 	public  ResponseEntity<Page<Map<String,Object>>> findAll(Pageable page){
 		Page<Map<String,Object>> data=tmtuTblwaybillService.findAll(page);
 		return new ResponseEntity<Page<Map<String,Object>>>(data, HttpStatus.OK);
 	}
-	@GetMapping("/activewaywills")
+	@GetMapping("/activewaybills")
 	public  ResponseEntity<Page<Map<String,Object>>> findAllActive(Pageable page){
 		Page<Map<String,Object>> data=tmtuTblwaybillService.findAllActive(page);
 		return new ResponseEntity<Page<Map<String,Object>>>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("/findwaywill")
+	@GetMapping("/findwaybill")
 	public  ResponseEntity<Map<String,Object>> findWayWill(@RequestParam("waywillno") Long waywillno){
 		Tblwaybill tbl=tmtuTblwaybillService.findWayWill(waywillno);
 		Map<String,Object>json=new HashMap<String,Object>();
@@ -155,8 +160,8 @@ public class TmtuTblwaybillController {
 		jsonInner.put("todate", tbl.getTbldutyallocation().getToDate().getTimeInMillis());
 		jsonInner.put("startstoppage", tbl.getTbldutyallocation().getStartStoppage());
 		jsonInner.put("endstoppage", tbl.getTbldutyallocation().getEndStoppage());
-		jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime().getTimeInMillis());
-		jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime().getTimeInMillis());
+		jsonInner.put("starttime", tbl.getTbldutyallocation().getStartTime());
+		jsonInner.put("endtime",tbl.getTbldutyallocation().getEndTime());
 		jsonInner.put("depotcode", tbl.getTbldutyallocation().getDepotcode());
 		jsonInner.put("depotname", tbl.getTbldutyallocation().getDepotName());
 		jsonInner.put("busnumber", tbl.getTbldutyallocation().getBusNumber());
@@ -168,7 +173,7 @@ public class TmtuTblwaybillController {
 		return new ResponseEntity<Map<String,Object>>(json, HttpStatus.OK);
 	}
 	
-	@GetMapping("/tranactionofwaywill")
+	@GetMapping("/tranactionofwaybill")
 	public ResponseEntity<Map<String,Object>>  tranactionofwaywill(
 			@RequestParam("waywillnumber") Long waywillnumber
 			) {

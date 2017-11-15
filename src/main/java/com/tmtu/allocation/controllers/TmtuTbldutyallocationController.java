@@ -1,7 +1,10 @@
 package com.tmtu.allocation.controllers;
 
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +30,7 @@ public class TmtuTbldutyallocationController {
 	
 	
 	@PostMapping("/saveduty")
-	public ResponseEntity<Map<String, Object>> save(
+	public ResponseEntity<List<Map<String, Object>>> save(
 			@RequestParam("conductorid")Long conductorId,
 			@RequestParam("routeno") Long routeNumber,
 			@RequestParam("machinenumber") String machineNumber,
@@ -46,30 +49,30 @@ public class TmtuTbldutyallocationController {
 			) 
 	{
 		
-		Tbldutyallocation tbl=tmtuTbldutyallocationService.save(conductorId, routeNumber, machineNumber, fromDate, toDate, startStoppage, endStoppage, startTime, endTime, depotcode, depotName, busNumber, shiftType, driverid, createdBy);
-		Map<String,Object> json=new HashMap<String, Object>();
-		if(tbl==null) {
-			json.put("msg", "Not saved");
-			return new ResponseEntity<Map<String,Object>>(json,HttpStatus.BAD_REQUEST);
-		}
-		json.put("dutyid", tbl.getDutyallocationid());
-		json.put("conductorid", tbl.getConductorId());
-		json.put("routenumber", tbl.getRouteNumber());
-		json.put("machinenumber", tbl.getMachineNumber());
-		json.put("fromdate", tbl.getFromDate().getTimeInMillis());
-		json.put("todate", tbl.getToDate().getTimeInMillis());
-		json.put("startstoppage", tbl.getStartStoppage());
-		json.put("endstoppage", tbl.getEndStoppage());
-		json.put("starttime", tbl.getStartTime().getTimeInMillis());
-		json.put("endtime",tbl.getEndTime().getTimeInMillis());
-		json.put("depotcode", tbl.getDepotcode());
-		json.put("depotname", tbl.getDepotName());
-		json.put("busnumber", tbl.getBusNumber());
-		json.put("shifttype", tbl.getShiftType());
-		json.put("driverid", tbl.getDriverid());
-		json.put("status", tbl.getStatus());
-		json.put("createon", tbl.getCreatedOn());
-		return new ResponseEntity<Map<String,Object>>(json,HttpStatus.OK);
+		List<Tbldutyallocation> tbls=tmtuTbldutyallocationService.save(conductorId, routeNumber, machineNumber, fromDate, toDate, startStoppage, endStoppage, startTime, endTime, depotcode, depotName, busNumber, shiftType, driverid, createdBy);
+		List<Map<String,Object>> tblist=new ArrayList<Map<String,Object>>() ;
+		tbls.forEach(tbl->{
+			Map<String,Object> json=new HashMap<String, Object>();
+			json.put("dutyid", tbl.getDutyallocationid());
+			json.put("conductorid", tbl.getConductorId());
+			json.put("routenumber", tbl.getRouteNumber());
+			json.put("machinenumber", tbl.getMachineNumber());
+			json.put("fromdate", tbl.getFromDate().getTimeInMillis());
+			json.put("todate", tbl.getToDate().getTimeInMillis());
+			json.put("startstoppage", tbl.getStartStoppage());
+			json.put("endstoppage", tbl.getEndStoppage());
+			json.put("starttime", tbl.getStartTime().getTimeInMillis());
+			json.put("endtime",tbl.getEndTime().getTimeInMillis());
+			json.put("depotcode", tbl.getDepotcode());
+			json.put("depotname", tbl.getDepotName());
+			json.put("busnumber", tbl.getBusNumber());
+			json.put("shifttype", tbl.getShiftType());
+			json.put("driverid", tbl.getDriverid());
+			json.put("status", tbl.getStatus());
+			json.put("createon", tbl.getCreatedOn());
+			tblist.add(json);
+		});
+		return new ResponseEntity<List<Map<String,Object>>>(tblist,HttpStatus.OK);
 	}
 	
 	@GetMapping("/getduty")

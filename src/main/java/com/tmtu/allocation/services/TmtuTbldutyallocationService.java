@@ -1,7 +1,14 @@
 package com.tmtu.allocation.services;
 
+
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+
+import org.joda.time.Days;
+import org.joda.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -19,7 +26,7 @@ public class TmtuTbldutyallocationService {
 	@Autowired
 	TmtuTbldutyallocationRepository tmtuTbldutyallocationRepository;
 	
-	public Tbldutyallocation save(
+	public List<Tbldutyallocation> save(
 			Long conductorId,
 			Long routeNumber,
 			String machineNumber,
@@ -36,15 +43,48 @@ public class TmtuTbldutyallocationService {
 			Long driverid,
 			Long createdBy
 			) {
-		Calendar cfromDate=Calendar.getInstance();
-		cfromDate.setTimeInMillis(fromDate);
-		Calendar ctoDate=Calendar.getInstance();
-		ctoDate.setTimeInMillis(toDate);
-		Calendar cstartTime=Calendar.getInstance();
-		cstartTime.setTimeInMillis(startTime);
-		Calendar cendTime=Calendar.getInstance();
-		cendTime.setTimeInMillis(endTime);
-		return tmtuTbldutyallocationRepository.save(conductorId, routeNumber, machineNumber, cfromDate, ctoDate, startStoppage, endStoppage, cstartTime, cendTime, depotcode, depotName, busNumber, shiftType, driverid, createdBy);
+		List<Tbldutyallocation> tbls=new ArrayList<Tbldutyallocation>();
+		List<Calendar> dutyDates=dutyDateList(fromDate,toDate);
+		Calendar startt=Calendar.getInstance();
+		startt.setTimeInMillis(startTime);
+		Calendar endt=Calendar.getInstance();
+		startt.setTimeInMillis(endTime);
+		dutyDates.forEach(date->{
+			Tbldutyallocation tbl=tmtuTbldutyallocationRepository.save(conductorId, routeNumber, machineNumber, date, date, startStoppage, endStoppage, startt, endt, depotcode, depotName, busNumber, shiftType, driverid, createdBy);
+			if(tbl!=null) {
+				tbls.add(tbl);
+			}
+		});
+		return tbls;
+	}
+	
+	public List<Calendar> dutyDateList(Long fromDate,Long toDate){
+		LocalDateTime cfromDate=new LocalDateTime(fromDate);
+		LocalDateTime ctoDate=new LocalDateTime(toDate);
+		int days=Days.daysBetween(cfromDate, ctoDate).getDays();
+		//It always show between days not added to and from like 1 to 5 it will give 3 days
+		List<LocalDateTime> dates=new ArrayList<LocalDateTime>(days);
+		//variable i start from zero so that cfromDate itself add other wise you can add it manual and start loop from 1
+		//Start Date added
+		dates.add(cfromDate);
+		//Middle Date Added
+		for(int i=1;i<=days;i++) {
+			dates.add(cfromDate.plusDays(i));
+		}
+		//last Date Added
+		dates.add(ctoDate);
+		List<Calendar> dutyDates=new ArrayList<Calendar>();
+		//Now Creating Dates
+		dates.forEach(da->{
+			Calendar cl=Calendar.getInstance();
+			cl.setTime(da.toDate());
+			cl.set( Calendar.HOUR_OF_DAY, 0 );
+		    cl.set( Calendar.MINUTE, 0 );
+		    cl.set( Calendar.SECOND, 0 );
+		    cl.set( Calendar.MILLISECOND, 0 );
+		    dutyDates.add(cl);
+		});
+		return dutyDates;
 	}
 	
 	public Page<Map<String,Object>> findAllActive(Pageable page){
