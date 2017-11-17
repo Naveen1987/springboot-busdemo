@@ -19,8 +19,12 @@ public interface TmtuTblwaybillRepositoryCustom {
 			Long createdBy
 			);
 	
-	public Tblwaybill cancel(
+	public String cancel(
 			Long waywillnumber,
 			Long modifiedby
 			);
+	
+	public Tblwaybill complete(Long waywillnumber, 
+			Long modifiedby);
+	
 }

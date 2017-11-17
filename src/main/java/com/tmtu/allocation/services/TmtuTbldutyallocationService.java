@@ -48,9 +48,21 @@ public class TmtuTbldutyallocationService {
 		Calendar startt=Calendar.getInstance();
 		startt.setTimeInMillis(startTime);
 		Calendar endt=Calendar.getInstance();
-		startt.setTimeInMillis(endTime);
+		endt.setTimeInMillis(endTime);
 		dutyDates.forEach(date->{
-			Tbldutyallocation tbl=tmtuTbldutyallocationRepository.save(conductorId, routeNumber, machineNumber, date, date, startStoppage, endStoppage, startt, endt, depotcode, depotName, busNumber, shiftType, driverid, createdBy);
+			Calendar timestart=Calendar.getInstance();
+			timestart.setTimeInMillis(date.getTimeInMillis());
+			timestart.set(Calendar.HOUR_OF_DAY, startt.get(Calendar.HOUR_OF_DAY));
+			timestart.set(Calendar.MINUTE, startt.get(Calendar.MINUTE));
+			timestart.set(Calendar.SECOND, startt.get(Calendar.SECOND));
+			timestart.set(Calendar.MILLISECOND, startt.get(Calendar.MILLISECOND));
+			Calendar timend=Calendar.getInstance();
+			timend.setTimeInMillis(date.getTimeInMillis());
+			timend.set(Calendar.HOUR_OF_DAY, startt.get(Calendar.HOUR_OF_DAY));
+			timend.set(Calendar.MINUTE, startt.get(Calendar.MINUTE));
+			timend.set(Calendar.SECOND, startt.get(Calendar.SECOND));
+			timend.set(Calendar.MILLISECOND, startt.get(Calendar.MILLISECOND));
+			Tbldutyallocation tbl=tmtuTbldutyallocationRepository.save(conductorId, routeNumber, machineNumber, date, date, startStoppage, endStoppage, timestart, timend, depotcode, depotName, busNumber, shiftType, driverid, createdBy);
 			if(tbl!=null) {
 				tbls.add(tbl);
 			}

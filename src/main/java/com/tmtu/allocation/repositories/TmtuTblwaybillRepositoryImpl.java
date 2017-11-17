@@ -1,11 +1,11 @@
 package com.tmtu.allocation.repositories;
 
+
 import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.tmtu.admin.models.Tbllogin;
 import com.tmtu.admin.repositories.TmtuTblloginRepository;
 import com.tmtu.allocation.models.Tbldutyallocation;
@@ -73,7 +73,7 @@ public class TmtuTblwaybillRepositoryImpl  implements TmtuTblwaybillRepositoryCu
 		tblwaybill.setCreatedOn(Calendar.getInstance());
 		tblwaybill.setIssuedRoll(issuedRoll);
 		tblwaybill.setIssuedTickets(issuedTickets);
-		tblwaybill.setStatus(true);
+		tblwaybill.setStatus(1);
 		tblwaybill.setWayBillDate(Calendar.getInstance());
 		//Adding refrence
 		tblwaybill.setTbldutyallocation(tbldutyallocation);
@@ -90,23 +90,61 @@ public class TmtuTblwaybillRepositoryImpl  implements TmtuTblwaybillRepositoryCu
 	}
 
 	@Override
-	public Tblwaybill cancel(Long waywillnumber, Long modifiedby) {
+	public String cancel(Long waywillnumber, Long modifiedby) {
+		Tblwaybill tblwaybill=tmtuTblwaybillRepository.findOne(waywillnumber);
+		if(tblwaybill==null) {
+			logger.error("waybill don't exists Waybill number is:"+waywillnumber);
+			return null;
+		}
+		tblwaybill.setStatus(2);
+		tblwaybill.setLastModifiedBy(modifiedby);
+		tblwaybill.setLastModifiedOn(Calendar.getInstance());
+		//Change in duty Models
+		Tbldutyallocation tblduty=tblwaybill.getTbldutyallocation();
+		if(tblduty!=null)
+		{
+		try {
+		tblduty.setStatus(1);
+		tblduty.setLastModifiedBy(modifiedby);
+		tblduty.setLastModifiedOn(Calendar.getInstance());
+		tmtuTbldutyallocationRepository.save(tblduty);
+		}catch (Exception e) {
+			logger.info("Duty Allocation status successfully Id:"+tblduty.getDutyallocationid());
+		}
+		}
+		try {
+			
+			//firstly delete old waybill and free duty
+			tmtuTblwaybillRepository.delete(waywillnumber);
+			//add agin with new Id so that record will exsits
+			tblwaybill.setWaybillnumber(Calendar.getInstance().getTimeInMillis());
+			tblwaybill=tmtuTblwaybillRepository.save(tblwaybill);
+			logger.info("Successfully canceled Waybill Id:"+waywillnumber);
+			return waywillnumber+"";
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	@Override
+	public Tblwaybill complete(Long waywillnumber, Long modifiedby) {
 		
 		Tblwaybill tblwaybill=tmtuTblwaybillRepository.findOne(waywillnumber);
 		if(tblwaybill==null) {
 			logger.error("waybill don't exists Waybill number is:"+waywillnumber);
 			return null;
 		}
-		tblwaybill.setStatus(false);
+		tblwaybill.setStatus(3);
 		tblwaybill.setLastModifiedBy(modifiedby);
 		tblwaybill.setLastModifiedOn(Calendar.getInstance());
 		//Change in duty Models
-		tblwaybill.getTbldutyallocation().setStatus(false);
+		tblwaybill.getTbldutyallocation().setStatus(3);
 		tblwaybill.getTbldutyallocation().setLastModifiedBy(modifiedby);
 		tblwaybill.getTbldutyallocation().setLastModifiedOn(Calendar.getInstance());
 		try {
 			tblwaybill=tmtuTblwaybillRepository.save(tblwaybill);
-			logger.info("Successfully canceled Waybill Id:"+waywillnumber);
+			logger.info("Successfully Completed Waybill Id:"+waywillnumber);
 			return tblwaybill;
 			
 		}catch (Exception e) {
@@ -114,4 +152,5 @@ public class TmtuTblwaybillRepositoryImpl  implements TmtuTblwaybillRepositoryCu
 		}
 		return null;
 	}
+	
 }

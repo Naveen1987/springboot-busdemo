@@ -42,7 +42,7 @@ public class TmtuTblwaybillController {
 		Tblwaybill tbl=tmtuTblwaybillService.save(dutyAllocationId,conductorId,machineNumber,driverid,busNumber,shiftType, issuedTickets, issuedRoll, createdBy);
 		if(tbl!=null) {
 			Map<String,Object>json=new HashMap<String,Object>();
-			json.put("msg", "Not Saved");
+			json.put("msg", "Saved");
 			json.put("waybillnumber", tbl.getWaybillnumber());
 			json.put("waybilldate", tbl.getWayBillDate().getTimeInMillis());
 			json.put("issuedtickets", tbl.getIssuedTickets());
@@ -82,10 +82,11 @@ public class TmtuTblwaybillController {
 			@RequestParam("waywillnumber") Long waywillnumber,
 			@RequestParam("modifiedby") Long modifiedby
 			) {
-		Tblwaybill tbl=tmtuTblwaybillService.cancel(waywillnumber, modifiedby);
+		String tbl=tmtuTblwaybillService.cancel(waywillnumber, modifiedby);
 		if(tbl!=null) {
 			Map<String,Object>json=new HashMap<String,Object>();
-			json.put("msg", "Not Saved");
+			json.put("msg", "Sucessfully cancel waybill Number is:"+tbl);
+			/*json.put("msg", "Not Saved");
 			json.put("waybillnumber", tbl.getWaybillnumber());
 			json.put("waybilldate", tbl.getWayBillDate().getTimeInMillis());
 			json.put("issuedtickets", tbl.getIssuedTickets());
@@ -110,7 +111,7 @@ public class TmtuTblwaybillController {
 			jsonInner.put("driverid", tbl.getTbldutyallocation().getDriverid());
 			jsonInner.put("status", tbl.getTbldutyallocation().getStatus());
 			jsonInner.put("createon", tbl.getTbldutyallocation().getCreatedOn());
-			json.put("duty", jsonInner);
+			json.put("duty", jsonInner);*/
 			return new ResponseEntity<Map<String,Object>>(json, HttpStatus.OK);
 		}
 		else {

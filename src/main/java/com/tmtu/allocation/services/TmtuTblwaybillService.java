@@ -32,7 +32,7 @@ public class TmtuTblwaybillService {
 		return tmtuTblwaybillRepository.save(dutyAllocationId,conductorId,machineNumber,driverid,busNumber,shiftType, issuedTickets, issuedRoll, createdBy);
 	}
 	
-	public Tblwaybill cancel(
+	public String cancel(
 			Long waywillnumber,
 			Long modifiedby
 			) {

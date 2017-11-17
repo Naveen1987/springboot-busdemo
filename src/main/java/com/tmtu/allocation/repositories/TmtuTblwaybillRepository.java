@@ -13,12 +13,13 @@ import com.tmtu.allocation.models.Tblwaybill;
 public interface TmtuTblwaybillRepository extends PagingAndSortingRepository<Tblwaybill,Long>,TmtuTblwaybillRepositoryCustom {
 
 	
-	@Query("select T from tblwaybill T where T.status=true and T.tbldutyallocation.status=true")
+	@Query("select T from tblwaybill T where T.status=1 and T.tbldutyallocation.status=1")
 	public Page<Tblwaybill> findAllActiveWayWill(Pageable page);
 	
-	@Query("select T from tblwaybill T where T.status=false and T.tbldutyallocation.status=false")
+	@Query("select T from tblwaybill T where T.status=2 and T.tbldutyallocation.status=2")
 	public Page<Tblwaybill> findAllCancelWayWill(Pageable page);
 	
-	
+	@Query("select T from tblwaybill T where T.status=3 and T.tbldutyallocation.status=3")
+	public Page<Tblwaybill> findAllcompleteWayWill(Pageable page);
 	
 }

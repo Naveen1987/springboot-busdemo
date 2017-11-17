@@ -39,8 +39,13 @@ public class Tblwaybill implements Serializable {
     private long waybillnumber;
     @Column(precision=19)
     private long issuedRoll;
+    /**Status value
+     * 1- create
+     * 2- cancel
+     * 3- complete
+     */
     @Column(precision=19)
-    private boolean status;
+    private long status;
     @Column(precision=19)
     private long createdBy;
     @Column(precision=19)
@@ -108,7 +113,7 @@ public class Tblwaybill implements Serializable {
      *
      * @return the current value of status
      */
-    public boolean getStatus() {
+    public long getStatus() {
         return status;
     }
 
@@ -117,7 +122,7 @@ public class Tblwaybill implements Serializable {
      *
      * @param aStatus the new value for status
      */
-    public void setStatus(boolean aStatus) {
+    public void setStatus(long aStatus) {
         status = aStatus;
     }
 

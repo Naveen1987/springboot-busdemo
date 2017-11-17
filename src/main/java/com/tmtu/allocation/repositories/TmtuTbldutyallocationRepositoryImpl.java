@@ -45,7 +45,7 @@ public class TmtuTbldutyallocationRepositoryImpl implements TmtuTbldutyallocatio
 		Tbldutyallocation tbldutyallocation=new Tbldutyallocation();
 		tbldutyallocation.setBusNumber(busNumber);
 		
-		tbldutyallocation.setStatus(true);
+		tbldutyallocation.setStatus(1);
 		
 		tbldutyallocation.setDepotcode(depotcode);
 		tbldutyallocation.setDepotName(depotName);

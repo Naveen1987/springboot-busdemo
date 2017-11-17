@@ -11,8 +11,8 @@ import com.tmtu.allocation.models.Tbldutyallocation;
 @Repository
 public interface TmtuTbldutyallocationRepository extends PagingAndSortingRepository<Tbldutyallocation,Long>,TmtuTbldutyallocationRepositoryCustom {
 
-	@Query("Select T from Tbldutyallocation T where T.status=true")
+	@Query("Select T from Tbldutyallocation T where T.status=1")
 	public Page<Tbldutyallocation> findAllWithActive(Pageable page);
-	@Query("Select T from Tbldutyallocation T where T.status=false")
+	@Query("Select T from Tbldutyallocation T where T.status=2")
 	public Page<Tbldutyallocation> findAllWithCancel(Pageable page);
 }
